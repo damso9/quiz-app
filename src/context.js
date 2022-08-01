@@ -27,6 +27,7 @@ const AppProvider = ({ children }) => {
 
   const [correctAnswerTotal, setCorrectAnswerTotal] = useState(0);
   const [questionTotal, setQuestionTotal] = useState(1);
+  const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false);
   const [waiting, setWaiting] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,18 +40,27 @@ const AppProvider = ({ children }) => {
 
   const fetchQuestion = async () => {
     try {
-      setLoading(true);
+      
       const response = await axios(`https://opentdb.com/api.php?amount=${quiz.amount}&category=${table[quiz.category]}&difficulty=${quiz.difficulty}&type=multiple`);
                                                                 
       const data = response.data.results;
-      setQuestions(data);
-      console.log(data[0].question);
-      // console.log(questions);
+      if (data.length > 0) {
+        setLoading(true);
+        setQuestions(data);
+        console.log(data[0].question);
+        // console.log(questions);
+  
+        setCorrectAnswerTotal(0);
+        setQuestionTotal(1);
+        setLoading(false);
+        setReloadQuiz(!reloadQuiz)
+        setWaiting(false)
+        // setWaiting(false);
+      } else {
+        setWaiting(true)
+        setError(true)
+      }
 
-      setCorrectAnswerTotal(0);
-      setQuestionTotal(1);
-      setLoading(false);
-      // setWaiting(false);
     } catch (error) {
       console.log(error.response);
     }
@@ -90,10 +100,11 @@ const AppProvider = ({ children }) => {
 
   };
 
-  const startQuiz = () => {
-    setWaiting(false)
+  const startQuiz = (e) => {
+    e.preventDefault()
+    console.log('start Quiz')
     fetchQuestion();
-    setReloadQuiz(!reloadQuiz)
+   
   }
 
   useEffect(() => {
@@ -116,7 +127,8 @@ const AppProvider = ({ children }) => {
         restartQuiz,
         quiz,
         handleQuizChange,
-        startQuiz
+        startQuiz,
+        error
         // property
         // question,
         // correct_answer,

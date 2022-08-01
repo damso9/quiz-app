@@ -2,7 +2,7 @@ import React from "react";
 import { useGlobalContext } from "./context";
 
 const SetupForm = () => {
-  const { quiz, handleQuizChange, startQuiz } = useGlobalContext();
+  const { quiz, handleQuizChange, startQuiz, error } = useGlobalContext();
   return (
     <section className="quiz quiz-small">
       <form className="setup-form">
@@ -54,7 +54,14 @@ const SetupForm = () => {
             <option value="hard">hard</option>
           </select>
         </div>
-        <button className="submit-btn" type="submit" onClick={startQuiz}>
+        {error && (
+          <p className="error">
+            can't generate questions, please try different options
+          </p>
+        )}
+        <button className="submit-btn" type="submit" onClick={(e) => {
+          startQuiz(e)
+        }}>
           start
         </button>
       </form>

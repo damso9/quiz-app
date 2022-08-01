@@ -32,7 +32,13 @@ function App() {
 
   const {question, correct_answer, incorrect_answers } = questions[index]
   console.log(question);
-  let totalOptions = [...incorrect_answers, correct_answer]
+
+// Generate RandomNumber from 0 to 3 to add the the totalOptions Array
+  let randomNumber = Math.floor(Math.random() * 4)
+  console.log(randomNumber)
+  let totalOptions = [...incorrect_answers]
+  // Add the correct answer randomly
+  totalOptions.splice(randomNumber, 0, correct_answer)
   console.log(totalOptions)
 
   return (
